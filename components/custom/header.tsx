@@ -20,23 +20,23 @@ export default function Header() {
           height={80}
           onClick={() => router.push("/")}
         />
-          {!sign ? (
+        {!sign ? (
+          <Button
+            onClick={() => router.push("/auth/sign-in")}
+            className="z-50 h-10 px-8 text-lg font-bold bg-red-600 text-white rounded-md hover:bg-red-700"
+          >
+            Sign In
+          </Button>
+        ) : (
+          pathname !== "/" && (
             <Button
-              onClick={() => router.push("/auth/sign-in")}
+              onClick={() => router.push("/auth/sign-out")}
               className="z-50 h-10 px-8 text-lg font-bold bg-red-600 text-white rounded-md hover:bg-red-700"
             >
-              Sign In
+              Sign Out
             </Button>
-          ) : (
-            pathname !== "/" && (
-              <Button
-                onClick={() => router.push("/auth/sign-out")}
-                className="z-50 h-10 px-8 text-lg font-bold bg-red-600 text-white rounded-md hover:bg-red-700"
-              >
-                Sign Out
-              </Button>
-            )
-          )}
+          )
+        )}
       </div>
     </>
   );

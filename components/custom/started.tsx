@@ -3,6 +3,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
+import { Label } from "../ui/label";
 import Header from "./header";
 import BG from "@/public/home/BG_Home.jpg";
 
@@ -52,12 +53,12 @@ export default function Started() {
                   placeholder=" "
                   className="peer w-full h-full px-6 pt-6 pb-2 text-sm md:text-lg text-white bg-transparent border border-gray-300 rounded-l-md placeholder-transparent focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-red-600"
                 />
-                <label
+                <Label
                   htmlFor="email"
                   className="absolute left-3 top-0 text-sm md:text-lg text-gray-400 transition-all duration-200 ease-in-out peer-placeholder-shown:top-4 peer-placeholder-shown:text-gray-500 peer-placeholder-shown:text-sm md:peer-placeholder-shown:text-lg peer-focus:top-2 peer-focus:text-red-600 peer-focus:text-[12px] md:peer-focus:text-sm"
                 >
                   Enter Your Email Address
-                </label>
+                </Label>
               </div>
               <Button
                 onClick={handleStarted}
