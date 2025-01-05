@@ -2,22 +2,18 @@
 
 import { z } from "zod";
 import bcrypt from "bcrypt";
-import connectToDatabase from "@/lib/db";
+import connectToDatabase from "@/utils/db";
 import User from "@/models/user.model";
 import { authSchema } from "@/schemas/auth.schema";
 
 export async function signupAction(data: FormData) {
   try {
-    // Convert FormData to a plain object
     const input = Object.fromEntries(data.entries());
 
-    // Validate input using Zod schema
     const validatedData = authSchema.parse(input);
 
-    // Connect to the database
     await connectToDatabase();
 
-    // Check if the email is already registered
     const existingUser = await User.findOne({ email: validatedData.email });
     if (existingUser) {
       return {
@@ -26,10 +22,8 @@ export async function signupAction(data: FormData) {
       };
     }
 
-    // Hash the user's password
-    const hashedPassword = await bcrypt.hash(validatedData.password, 12); // 12 salt rounds for better security
+    const hashedPassword = await bcrypt.hash(validatedData.password, 12);
 
-    // Create and save the new user
     const newUser = new User({
       fullName: validatedData.fullName,
       email: validatedData.email,
@@ -43,8 +37,9 @@ export async function signupAction(data: FormData) {
     };
   } catch (error) {
     if (error instanceof z.ZodError) {
-      // Format and return all validation errors
-      const validationErrors = error.errors.map((err) => err.message).join(", ");
+      const validationErrors = error.errors
+        .map((err) => err.message)
+        .join(", ");
       return {
         success: false,
         message: `Validation Error(s): ${validationErrors}`,

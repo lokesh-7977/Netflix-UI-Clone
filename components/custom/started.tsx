@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-import Header from "./header";
 import BG from "@/public/home/BG_Home.jpg";
 
 interface HandleStarted {
@@ -19,7 +18,6 @@ export default function Started() {
   };
   return (
     <>
-      <Header />
       <div className="relative h-screen">
         <Image
           className="absolute object-cover w-full h-full"

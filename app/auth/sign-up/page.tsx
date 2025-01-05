@@ -53,9 +53,9 @@ export default function SignUp() {
     setErrorMsg({});
 
     const formDataToSend = new FormData();
-    formDataToSend.append("fullName", result.data.fullName);
-    formDataToSend.append("email", result.data.email);
-    formDataToSend.append("password", result.data.password);
+    formDataToSend.append("fullName", result.data.fullName || "");
+    formDataToSend.append("email", result.data.email || "");
+    formDataToSend.append("password", result.data.password || "");
 
     try {
       const response = await signupAction(formDataToSend);

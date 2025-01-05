@@ -5,18 +5,17 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { authSchema } from "@/schemas/auth.schema";
-import { toast, Toaster } from "react-hot-toast";
-import { signIn } from "next-auth/react";
-import Header from "@/components/custom/header";
+import { toast } from "react-hot-toast";
+import { Signin } from "./action";
 import BG from "@/public/home/BG_Home.jpg";
 
+interface SignInFormData {
+  email: string;
+  password: string;
+}
+
 export default function SignIn() {
-  const [errorMsg, setErrorMsg] = useState<{
-    email?: string;
-    password?: string;
-  }>({});
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<SignInFormData>({
     email: "",
     password: "",
   });
@@ -24,70 +23,56 @@ export default function SignIn() {
   const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.id]: e.target.value,
-    }));
-
-    setErrorMsg((prev) => ({
-      ...prev,
-      [e.target.id]: undefined,
-    }));
+    const { id, value } = e.target;
+    setFormData((prev) => ({ ...prev, [id]: value }));
   };
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    const result = authSchema.safeParse(formData);
-
-    if (!result.success) {
-      const errors: { email?: string; password?: string } = {};
-      result.error.errors.forEach((err) => {
-        if (err.path[0] === "email") errors.email = err.message;
-        if (err.path[0] === "password") errors.password = err.message;
-      });
-      setErrorMsg(errors);
+  
+    if (!formData.email || !formData.password) {
+      toast.error("Email and password are required");
       return;
     }
-
+  
     try {
-      const response = await signIn("credentials", {
-        redirect: false,
-        email: formData.email,
-        password: formData.password,
-      });
-
-      if (response?.error) {
-        toast.error(response.error);
-      } else {
-        toast.success("Sign-in successful!");
-        router.push("/browse");
+      const response = await Signin(formData);
+      if (!response || response.error) {
+        toast.error(response?.error || "Invalid credentials");
+        return;
       }
-    } catch {
-      toast.error("An unexpected error occurred. Please try again.");
+  
+      toast.success("Sign-in successful!");
+      router.push("/");
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message || "An unexpected error occurred");
+      } else {
+        toast.error("An unexpected error occurred");
+      }
     }
   };
+  
+
   return (
-     <>
-      <Toaster />
-      <Header />
+    <>
       <div className="relative h-screen">
         <Image
-          className="absolute object-cover w-full h-full"
           src={BG}
           alt="Background"
           fill
           priority
+          className="absolute object-cover w-full h-full"
         />
-
         <div className="absolute inset-0 bg-black bg-opacity-70 z-10"></div>
-
         <div className="absolute inset-0 z-20 flex items-center justify-center">
           <div className="flex flex-col items-center justify-center p-8 w-[450px] bg-black bg-opacity-50 rounded-md text-center">
-            <h1 className="text-white self-center text-4xl font-bold">
-              Sign In
-            </h1>
-            <form className="space-y-6 w-3/4 pt-5" onSubmit={handleSignIn}>
+            <h1 className="text-white text-4xl font-bold">Sign In</h1>
+            <form
+              className="space-y-6 w-3/4 pt-5"
+              onSubmit={handleSignIn}
+              noValidate
+            >
               <Input
                 id="email"
                 type="email"
@@ -95,6 +80,7 @@ export default function SignIn() {
                 onChange={handleChange}
                 value={formData.email}
                 className="peer h-12 w-[282px] px-6 py-4 text-sm md:text-lg text-white bg-transparent border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-red-600"
+                required
               />
               <Input
                 id="password"
@@ -103,6 +89,7 @@ export default function SignIn() {
                 onChange={handleChange}
                 value={formData.password}
                 className="peer h-12 w-[282px] py-4 text-sm md:text-lg text-white bg-transparent border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-red-600"
+                required
               />
               <Button
                 type="submit"
@@ -111,12 +98,6 @@ export default function SignIn() {
                 Sign In
               </Button>
             </form>
-            {errorMsg && (
-              <div className="text-red-500 pt-2">
-                {errorMsg.email && <p>{errorMsg.email}</p>}
-                {errorMsg.password && <p>{errorMsg.password}</p>}
-              </div>
-            )}
             <p className="text-gray-500 pt-5">
               Don&apos;t have an account?{" "}
               <span
