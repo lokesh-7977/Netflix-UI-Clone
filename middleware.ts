@@ -3,12 +3,11 @@ import { NextFetchEvent, NextRequest, NextResponse } from "next/server";
 
 const authMiddleware = withAuth({
   callbacks: {
-    authorized: ({ token }) => {
-      return !!token;
-    },
+    authorized: ({ token }) => Boolean(token),
   },
   pages: {
     signIn: "/auth/sign-in",
+    signOut: "/auth/sign-out"
   },
 });
 
@@ -27,5 +26,5 @@ export default function middleware(req: NextRequest, event: NextFetchEvent) {
 }
 
 export const config = {
-  matcher: ["/browse"],
+  matcher: ["/browse","/auth/:path*"], 
 };
