@@ -28,7 +28,7 @@ export default function Header() {
             Sign In
           </Button>
         ) : (
-          pathname !== "/" && (
+          pathname !== "/" && pathname !== "/auth/sign-in" && (
             <Button
               onClick={() => router.push("/auth/sign-out")}
               className="z-50 h-10 px-8 text-lg font-bold bg-red-600 text-white rounded-md hover:bg-red-700"
