@@ -43,7 +43,7 @@ export default function SignIn() {
       }
   
       toast.success("Sign-in successful!");
-      router.push("/");
+      router.push("/browse");
     } catch (error) {
       if (error instanceof Error) {
         toast.error(error.message || "An unexpected error occurred");
