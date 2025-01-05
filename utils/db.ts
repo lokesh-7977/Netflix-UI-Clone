@@ -25,7 +25,6 @@ export default async function connectToDatabase(): Promise<mongoose.Connection> 
 
   try {
     global.mongoose.conn = (await global.mongoose.promise).connection;
-    console.log("Connected to the database");
     return global.mongoose.conn;
   } catch (error) {
     global.mongoose.promise = null; 
