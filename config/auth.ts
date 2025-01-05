@@ -32,7 +32,7 @@ export const options: NextAuthOptions = {
         }
 
         try {
-          await dbConnect(); // Ensure database connection
+          await dbConnect();
           const user = (await User.findOne({
             email: credentials.email,
           }).exec()) as {
@@ -61,8 +61,10 @@ export const options: NextAuthOptions = {
             fullName: user.fullName,
           };
         } catch (error) {
-          console.error("Error in authorize:", error);
-          throw new Error("Internal server error");
+          if (error instanceof Error && error.message === "User not found") {
+            throw new Error("User not found");
+          }
+          throw new Error("An unexpected error occurred");
         }
       },
     }),

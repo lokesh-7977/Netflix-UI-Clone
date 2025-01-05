@@ -41,6 +41,11 @@ export default function SignIn() {
         toast.error(response?.error || "Invalid credentials");
         return;
       }
+
+      if(response.status === 401) {
+        toast.error("User Not Found");
+        return;
+      }
   
       toast.success("Sign-in successful!");
       router.push("/browse");
