@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "react-hot-toast";
@@ -105,12 +106,11 @@ export default function SignIn() {
             </form>
             <p className="text-gray-500 pt-5">
               Don&apos;t have an account?{" "}
-              <span
+             <Link href={"/auth/sign-up"}><span
                 className="text-white font-bold cursor-pointer"
-                onClick={() => router.push("/auth/sign-up")}
               >
                 Sign Up now.
-              </span>
+              </span></Link>
             </p>
           </div>
         </div>

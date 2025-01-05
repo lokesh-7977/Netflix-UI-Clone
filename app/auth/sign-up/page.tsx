@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { authSchema } from "@/schemas/auth.schema";
@@ -38,7 +39,8 @@ export default function SignUp() {
     const result = authSchema.safeParse(formData);
 
     if (!result.success) {
-      const errors: { fullName?: string; email?: string; password?: string } = {};
+      const errors: { fullName?: string; email?: string; password?: string } =
+        {};
 
       result.error.errors.forEach((err) => {
         if (err.path[0] === "fullName") errors.fullName = err.message;
@@ -70,7 +72,6 @@ export default function SignUp() {
       toast.error("Something went wrong. Please try again later.");
     }
   };
-
 
   return (
     <>
@@ -132,13 +133,12 @@ export default function SignUp() {
               </div>
             )}
             <p className="text-gray-500 pt-5">
-              Don&apos;t have an account?{" "}
-              <span
-                className="text-white font-bold cursor-pointer"
-                onClick={() => router.push("/auth/sign-in")}
-              >
-                Sign In now.
-              </span>
+              Have an account?{" "}
+              <Link href={"/auth/sign-in"}>
+                <span className="text-white font-bold cursor-pointer">
+                  Sign In now.
+                </span>
+              </Link>
             </p>
           </div>
         </div>
